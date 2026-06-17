@@ -1,0 +1,89 @@
+
+================================================================================
+  DRAFT EMAIL — ÉTUDE COMPARATIVE IFI
+================================================================================
+
+Objet : Étude comparative — Achat cash vs financement bancaire | Résidence principale 5M€
+
+Bonjour [Prénom],
+
+Suite à notre échange, veuillez trouver ci-joint l'étude comparative que nous
+avons préparée pour vous aider à prendre votre décision.
+
+────────────────────────────────────────────────────────────────────────────────
+  LA QUESTION
+────────────────────────────────────────────────────────────────────────────────
+
+Vous envisagez l'acquisition de votre résidence principale pour 5 000 000 €.
+Vous disposez des fonds pour acheter cash. La question est simple :
+est-il financièrement préférable d'acheter cash ou de recourir à un emprunt ?
+
+────────────────────────────────────────────────────────────────────────────────
+  LES HYPOTHÈSES RETENUES
+────────────────────────────────────────────────────────────────────────────────
+
+  Maison               : 5 000 000 € (résidence principale, Paris)
+  Revalorisation immo  : +2,5%/an → 8,2M€ à 20 ans
+  Emprunt              : 5 000 000 € à 4% fixe sur 20 ans
+                         Mensualité : 30,299 €/mois
+  Placement            : 5 000 000 € en assurance-vie à 5% composé, 0% fiscalité
+  Service de la dette  : vos autres revenus — le placement n'est jamais touché
+  Base IFI             : 3 500 000 € fixe (5M€ × 70%, abattement RP 30%)
+
+────────────────────────────────────────────────────────────────────────────────
+  LES 3 EFFETS CLÉ DU FINANCEMENT BANCAIRE
+────────────────────────────────────────────────────────────────────────────────
+
+  1. PROTECTION IFI PENDANT 13 ANS
+     La dette vient en déduction de votre base taxable IFI.
+     Tant que le Capital Restant Dû (CRD) dépasse 2 200 000 €,
+     votre base nette reste sous le seuil de 1 300 000 € → IFI = 0 €.
+     Économie : 20 690 €/an pendant 13 ans = 268 970 € économisés.
+     (L'IFI reprend progressivement à partir de l'an 14, mais reste très faible)
+
+  2. EFFET DE LEVIER FINANCIER
+     En conservant vos 5M€ investis à 5% pendant que vous empruntez à 4%,
+     vous générez un gain net dès l'an 1 :
+       → An 1 : 250 000 € (rdt) − 196 967 € (intérêts) = 53 033 € de gain net
+       → Ce gain augmente chaque année (le placement grossit, les intérêts baissent)
+       → An 20 : 631 738 € − 7 757 € = 623 981 € de gain net
+
+  3. CAPITALISATION DES GAINS
+     L'ensemble de ces gains (levier + IFI économisée) est réinvesti à 5%/an.
+     Au bout de 20 ans, ce compte de capitalisation atteint 9.0M€.
+
+────────────────────────────────────────────────────────────────────────────────
+  RÉSULTAT À 20 ANS
+────────────────────────────────────────────────────────────────────────────────
+
+  SCÉNARIO A — ACHAT CASH
+    Maison revalorisée              : 8.19M€
+    Patrimoine financier            :  0,00M€
+    IFI payée sur 20 ans            : −414k€
+    ─────────────────────────────────────────
+    PATRIMOINE NET TOTAL            : 7.78M€
+
+  SCÉNARIO B — EMPRUNT 4% / 20 ANS
+    Maison revalorisée              : 8.19M€  (identique)
+    Placement 5M€ → 20 ans          : 13.27M€
+    Flux réinvestis capitalisés     : 8.96M€
+    Intérêts payés (20 ans)         : −2.27M€
+    IFI payée sur 20 ans            : −81k€
+    ─────────────────────────────────────────
+    PATRIMOINE NET TOTAL            : 28.06M€
+
+  AVANTAGE NET DU FINANCEMENT      : +20.28M€
+
+────────────────────────────────────────────────────────────────────────────────
+
+Vous trouverez en pièce jointe le fichier Excel détaillant :
+  • Onglet 1 : toutes les hypothèses (modifiables)
+  • Onglet 2 : le tableau comparatif année par année
+  • Onglet 3 : le détail de chaque calcul pour vérification
+
+Je reste bien entendu disponible pour échanger sur ces résultats et affiner
+les paramètres selon votre situation.
+
+Bien cordialement,
+[Votre nom]
+================================================================================
