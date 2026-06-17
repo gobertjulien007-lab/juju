@@ -138,55 +138,108 @@ def base_ax(ax, title, subtitle='', xlabel='Année', ylabel=''):
     for sp in ['left', 'bottom']: ax.spines[sp].set_color(GRILLE)
 
 # ==============================================================================
-# VISUEL 1 — CRD vs Base IFI (inchangé, toujours correct)
+# VISUEL 1 — CRD vs Base IFI — redesigné : épuré, deux événements distincts
 # ==============================================================================
-fig1, ax = plt.subplots(figsize=(13, 6.5))
+import numpy as np
+
+fig1, ax = plt.subplots(figsize=(14, 7))
 fig1.patch.set_facecolor('white')
+ax.set_facecolor('#FAFAFA')
 
 crds    = [d['crd_fin'] / 1e6 for d in data]
 base_bs = [d['base_B']  / 1e6 for d in data]
 an_decl = next(d['an'] for d in data if d['ifi_B'] > 0)
 
-ax.axvspan(0.5, an_decl - 0.5, alpha=0.07, color=VERT,  zorder=1)
-ax.axvspan(an_decl - 0.5, 20.5, alpha=0.07, color=ROUGE, zorder=1)
+# ── Trouver l'an de croisement des deux courbes (CRD = base_B → CRD = 1,75M€)
+an_crois = next(
+    (data[i]['an'] for i in range(len(data) - 1)
+     if crds[i] >= base_bs[i] and crds[i+1] <= base_bs[i+1]),
+    None
+)
 
-ax.plot(ans, crds,    color=BLEU, lw=2.5, marker='o', ms=4,
-        label='Capital Restant Dû (CRD)  —  encours capital dû à la banque')
-ax.plot(ans, base_bs, color=VERT, lw=2.5, marker='s', ms=4,
-        label='Base IFI nette  =  3,5M€ − CRD  —  montant taxable par l\'État')
+# ── Zones colorées épurées
+ax.axvspan(0.5, an_decl - 0.5, alpha=0.06, color=VERT,  zorder=1)
+ax.axvspan(an_decl - 0.5, 20.5, alpha=0.06, color=ROUGE, zorder=1)
 
-ax.axhline(IFI_SEUIL / 1e6, color=ROUGE, lw=1.5, linestyle='--', zorder=4)
-ax.text(20.4, IFI_SEUIL / 1e6 + 0.08, "Seuil IFI\n1,3M€", fontsize=8.5, color=ROUGE, va='bottom')
+# ── Courbes principales
+ax.plot(ans, crds,    color=BLEU, lw=3, marker='o', ms=4.5, zorder=5,
+        label='① CRD — Capital Restant Dû (dette bancaire)')
+ax.plot(ans, base_bs, color=VERT, lw=3, marker='s', ms=4.5, zorder=5,
+        label='② Base IFI nette = 3,5M€ − CRD')
 
+# ── Ligne seuil IFI 1,3M€
+ax.axhline(IFI_SEUIL / 1e6, color=ROUGE, lw=1.8, linestyle='--', zorder=4, alpha=0.9)
+ax.text(20.45, IFI_SEUIL / 1e6, "Seuil IFI\n1,3M€",
+        fontsize=8.5, color=ROUGE, va='center', fontweight='bold')
+
+# ── Ligne CRD critique 2,2M€
 crd_crit = (BASE_IFI_FIXE - IFI_SEUIL) / 1e6
-ax.axhline(crd_crit, color=BLEU, lw=1, linestyle=':', alpha=0.6, zorder=4)
-ax.text(0.7, crd_crit + 0.1,
-        f"CRD critique = {crd_crit:.1f}M€  →  en dessous : IFI se déclenche",
-        fontsize=8, color=BLEU, alpha=0.85)
+ax.axhline(crd_crit, color=BLEU, lw=1.5, linestyle=':', alpha=0.5, zorder=4)
+ax.text(1, crd_crit + 0.12, f"CRD critique : {crd_crit:.1f}M€",
+        fontsize=8, color=BLEU, alpha=0.8)
 
+# ── ÉVÉNEMENT A : Déclenchement IFI (an 14) — annotation épurée sur la courbe
 d_decl = data[an_decl - 1]
+ax.axvline(an_decl, color=ROUGE, lw=1.2, linestyle='--', alpha=0.6, zorder=3)
+# Encadré mathématique sobre
 ax.annotate(
-    f"An {an_decl} : IFI se déclenche\nCRD = {d_decl['crd_fin']/1e6:.2f}M€\n"
-    f"Base B = {d_decl['base_B']/1e6:.2f}M€\n→ IFI due : {d_decl['ifi_B']:,.0f} €",
-    xy=(an_decl, d_decl['base_B'] / 1e6), xytext=(an_decl - 3.5, 2.5),
+    f"An {an_decl}  ①  CRD = {d_decl['crd_fin']/1e6:.2f}M€\n"
+    f"          ②  Base = {d_decl['base_B']/1e6:.2f}M€\n"
+    f"          ①  <  2,2M€  →  IFI due",
+    xy=(an_decl, d_decl['crd_fin'] / 1e6),
+    xytext=(an_decl - 4.5, 3.5),
     fontsize=8.5, color=ROUGE,
-    arrowprops=dict(arrowstyle='->', color=ROUGE, lw=1.2),
-    bbox=dict(boxstyle='round,pad=0.4', facecolor='#FEF2F2', edgecolor=ROUGE, alpha=0.95))
+    arrowprops=dict(arrowstyle='->', color=ROUGE, lw=1.2, connectionstyle='arc3,rad=-0.15'),
+    bbox=dict(boxstyle='round,pad=0.45', facecolor='#FEF2F2', edgecolor=ROUGE, alpha=0.97))
 
-ax.text((an_decl - 1) / 2 + 0.5, -0.9,
-        f"PROTECTION TOTALE\n{an_decl - 1} ans — IFI = 0 €",
+# ── ÉVÉNEMENT B : Croisement des courbes — si trouvé
+if an_crois:
+    d_crois = data[an_crois - 1]
+    mid_y   = (crds[an_crois - 1] + base_bs[an_crois - 1]) / 2
+    ax.axvline(an_crois, color='#7C3AED', lw=1.2, linestyle='--', alpha=0.55, zorder=3)
+    ax.plot(an_crois, mid_y, marker='X', ms=12, color='#7C3AED', zorder=6)
+    ax.annotate(
+        f"An {an_crois}  ①  =  ②\nCRD = Base = 1,75M€\n(≠ déclenchement IFI)",
+        xy=(an_crois, mid_y),
+        xytext=(an_crois + 0.8, mid_y + 1.2),
+        fontsize=8.5, color='#7C3AED',
+        arrowprops=dict(arrowstyle='->', color='#7C3AED', lw=1.1),
+        bbox=dict(boxstyle='round,pad=0.4', facecolor='#F5F3FF', edgecolor='#7C3AED', alpha=0.97))
+
+# ── Labels directs sur les courbes (an 5 et an 15)
+for an_lbl in [5, 10, 15]:
+    i = an_lbl - 1
+    ax.text(an_lbl, crds[i] + 0.2,    f"{crds[i]:.1f}M",
+            ha='center', fontsize=7.5, color=BLEU, fontweight='bold')
+    ax.text(an_lbl, base_bs[i] - 0.3, f"{base_bs[i]:.1f}M",
+            ha='center', fontsize=7.5, color=VERT, fontweight='bold')
+
+# ── Étiquettes de zone (texte minimal)
+ax.text(6.5, -1.2, f"IFI = 0 €\n(13 ans de protection)",
         ha='center', fontsize=9.5, color=VERT, fontweight='bold',
-        bbox=dict(boxstyle='round', facecolor='#F0FDF4', edgecolor=VERT, alpha=0.85))
-ax.text((an_decl + 20) / 2, -0.9,
-        f"IFI progressive\nans {an_decl}–20",
+        bbox=dict(boxstyle='round', facecolor='#F0FDF4', edgecolor=VERT, lw=1.2, alpha=0.92))
+ax.text(17, -1.2, "IFI progressive\nan 14 → 20",
         ha='center', fontsize=9, color=ROUGE,
-        bbox=dict(boxstyle='round', facecolor='#FEF2F2', edgecolor=ROUGE, alpha=0.85))
+        bbox=dict(boxstyle='round', facecolor='#FEF2F2', edgecolor=ROUGE, lw=1.2, alpha=0.92))
 
-base_ax(ax, "La dette neutralise l'IFI pendant 13 ans",
-    subtitle="Base IFI = 3 500 000 € fixe  |  Déduction : CRD (capital uniquement, hors intérêts — Bofip)",
-    ylabel="Millions €")
-ax.set_ylim(-1.6, 5.8)
-ax.legend(fontsize=9, loc='upper right', framealpha=0.95)
+# ── Titre épuré
+ax.set_title(
+    "Protection IFI par la dette : deux événements à distinguer",
+    fontsize=13, fontweight='bold', color=NOIR, pad=14)
+
+# ── Légende et axes
+ax.legend(fontsize=9.5, loc='upper center', framealpha=0.95,
+          bbox_to_anchor=(0.5, 0.99), ncol=2)
+ax.set_xlabel("Année", fontsize=9, color=GRIS)
+ax.set_ylabel("Millions €", fontsize=9, color=GRIS)
+ax.set_xticks(ans)
+ax.tick_params(colors=GRIS, labelsize=8.5)
+ax.grid(axis='y', color=GRILLE, linewidth=0.8, zorder=0)
+for sp in ['top', 'right']: ax.spines[sp].set_visible(False)
+for sp in ['left', 'bottom']: ax.spines[sp].set_color(GRILLE)
+ax.set_xlim(0.3, 21.5)
+ax.set_ylim(-1.8, 5.8)
+
 plt.tight_layout()
 fig1.savefig('visuel_1_crd_vs_ifi.png', dpi=150, bbox_inches='tight')
 print("✓ visuel_1_crd_vs_ifi.png")
